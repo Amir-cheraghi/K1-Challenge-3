@@ -1,0 +1,20 @@
+{
+  "name": "challege3_by_k1",
+  "version": "1.0.0",
+  "description": "challegne 3 of 20 challenge of k1 (Simple Gallery)",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amir-cheraghi/K1-Challenge-3.git"
+  },
+  "author": "Amir Chearghi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Amir-cheraghi/K1-Challenge-3/issues"
+  },
+  "homepage": "https://github.com/Amir-cheraghi/K1-Challenge-3#readme"
+}
