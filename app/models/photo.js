@@ -6,7 +6,8 @@ const photoSchema = new mongoose.Schema({
     largePhotoPath : {type : String},
     title : {type : String , default : 'Uploaded-Image'},
     width : {type : String},
-    height : {type : String}
+    height : {type : String},
+    size : {type : String}
 },{timeStamps : true})
 
 

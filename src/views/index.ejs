@@ -37,13 +37,13 @@
           <% data.forEach((el,i) => { %>
             <div class="card" style="width: 30%; height: 30%;"  onmouseover="mouseOverImg(this)"
               onmouseout="mouseOutImg(this)">
-              <img src="<%- data[i].smallPhotoPath%>" data-toggle="modal" data-target="#<%-data[i]._id%>" style="cursor: pointer;" onclick="showSelf(this)">
+              <img src="<%- el.smallPhotoPath%>" data-toggle="modal" data-target="#<%-el._id%>" style="cursor: pointer;" onclick="showSelf(this)">
               
               <div class="card-body shadow">
                 <ul class="list-group list-group-flush">
-                  <button class="btn list-group-item mb-1">Photo Title</button>
+                  <button class="btn list-group-item mb-1"><%- el.title %></button>
                   <button class="btn list-group-item mb-1 text-danger">Remove Photo</button>
-                  <button class="btn list-group-item mb-1 text-primary" data-toggle="modal" data-target="#<%-data[i]._id%>"  onclick="showSelf(this)">Show Large
+                  <button class="btn list-group-item mb-1 text-primary" data-toggle="modal" data-target="#<%-el._id%>"  onclick="showSelf(this)">Show Large
                     Version</button>
                 </ul>
               </div>
@@ -64,68 +64,6 @@
 
 
       <!-- ||||| Modals ||||| -->
-
-
-      <!-- View Large Modal -->
-      
-
-
-
-      <!-- Edit Picture Modal -->
-      <div class="modal fade" id="edit-pic1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Edit - Picture Title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body text-left">
-              to Edit Picture Title Please Enter Value And Sumbit
-
-              <div class="input-group input-group-sm mb-3 mt-3 w-75">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">Title</span>
-                </div>
-                <input type="text" class="form-control" aria-label="Small" name="email" id="title"
-                  aria-describedby="inputGroup-sizing-sm">
-              </div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="">Submit</button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Remove Picture Modal -->
-      <div class="modal fade" id="remove-pic1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLongTitle">Remove - Picture Title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body text-center">
-              <div class="m-3">Are Sure You Wanna Delete "Picture Title" ???</div>
-
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" onclick="">Delete</button>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-
 
       <!-- Add Photo -->
       <div class="modal fade" id="addPhoto" role="dialog" aria-hidden="true">

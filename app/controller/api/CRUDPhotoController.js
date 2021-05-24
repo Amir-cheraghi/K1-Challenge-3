@@ -10,4 +10,12 @@ module.exports = new class frontController{
         })
     }
 
+    async getSinglePhoto(req,res,next){
+        const data = await Photo.findById(req.params.id)
+        res.json({
+            status : 'success',
+            data 
+        })
+    }
+
 }
