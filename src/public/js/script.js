@@ -41,7 +41,6 @@ function mouseOverImg(e) {
        },
        complete: ()=>{
          $('#loadingModal').remove()
-
       },
         success : (res)=>{
           $('body').append(`
@@ -136,7 +135,7 @@ function mouseOverImg(e) {
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" onclick="">Delete</button>
+                <button type="button" class="btn btn-danger" data-id = ${res.data._id} id="removeSelf" onclick="removeSelf(this)">Delete</button>
               </div>
 
             </div>
@@ -152,12 +151,80 @@ function mouseOverImg(e) {
       $(`#${modalId}`).modal()
   }
 
+
+
+
+
  $('#addPhotoForm').on('submit' , function(ev){
    ev.preventDefault()
    let formData = new FormData(this)
 
    for (i=0 ; i<this[0].files.length ; i++) {
-    formData.append(`image-${i}` , this[0].files[i])
+    formData.append(`photos` , this[0].files[i])
    }
-   console.log(...formData) 
+
+   $.ajax({
+     type : 'POST',
+     url : `${window.location}api/photos`,
+     async : true,
+     processData : false,
+     contentType  : false,
+     data : formData,
+     beforeSend : ()=>{
+      $('#addPhotos').attr('disabled','true')
+      $('#addPhotos').html(`
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div> `
+    )},
+     success : (res)=>{
+       if(res.status === 'success')
+        setTimeout(location.reload(),1000)
+     }
+   })
  })
+
+
+ $('#removeAllPhotos').on('click' , ()=>{
+
+  $.ajax({
+    type : 'DELETE',
+    url : `${window.location}api/photos`,
+    async : true,
+    beforeSend : ()=>{
+      $('#removeAllPhotos').attr('disabled','true')
+      $('#removeAllPhotos').html(`
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div> `
+    )
+    },
+    success : (res)=>{
+      if(res.status === 'success')
+       setTimeout(location.reload(),1000)
+    }
+  })
+})
+
+
+function removeSelf(e){
+  const id = $(e).attr('data-id')
+  console.log(id)
+  $.ajax({
+    type : 'DELETE',
+    url : `${window.location}api/photos/${id}`,
+    async : true,
+    beforeSend : ()=>{
+      $('#removeSelf').attr('disabled','true')
+      $('#removeSelf').html(`
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div> `
+    )
+    },
+    success : (res)=>{
+      if(res.status === 'success')
+       setTimeout(location.reload(),1000)
+    }
+  })
+}
