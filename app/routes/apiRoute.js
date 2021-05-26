@@ -11,6 +11,7 @@ router.route('/photos')
 router.route('/photos/:id')
 .get(apiController.getSinglePhoto)
 .delete(apiController.deletePhotoById)
+.put(multer.single('photos'),apiController.editPhoto)
 
 
 

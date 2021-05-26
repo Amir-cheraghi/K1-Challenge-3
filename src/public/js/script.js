@@ -1,29 +1,29 @@
 function mouseOverImg(e) {
-    anime({
-      targets: e,
-      width: '35%',
-      height: '35%',
-    });
-  }
+  anime({
+    targets: e,
+    width: '35%',
+    height: '35%',
+  });
+}
 
-  function mouseOutImg(e) {
-    anime({
-      targets: e,
-      width: '30%',
-      height: '30%',
+function mouseOutImg(e) {
+  anime({
+    targets: e,
+    width: '30%',
+    height: '30%',
 
-    });
-  }
+  });
+}
 
- async function showSelf(e){
-    const modalId = $(e).attr('data-target').replace(/#/,'')
-    if($(`#${modalId}`).length === 0){
-      $.ajax({
-        url : `${window.location}api/photos/${modalId}`,
-        type : 'GET',
-        async : true,
-        beforeSend: ()=>{
-          $('body').append(
+async function showSelf(e) {
+  const modalId = $(e).attr('data-target').replace(/#/, '')
+  if ($(`#${modalId}`).length === 0) {
+    $.ajax({
+      url: `api/photos/${modalId}`,
+      type: 'GET',
+      async: true,
+      beforeSend: () => {
+        $('body').append(
           `<div class="modal fade" id="loadingModal" role="dialog" aria-hidden="true">
             <div class="modal-dialog modal-sm">
               <div class="modal-content">
@@ -36,14 +36,14 @@ function mouseOverImg(e) {
             </div>  
           </div>
           `
-          )
-        $('#loadingModal').modal({backdrop:false})
-       },
-       complete: ()=>{
-         $('#loadingModal').remove()
+        )
+        $('#loadingModal').modal({ backdrop: false })
       },
-        success : (res)=>{
-          $('body').append(`
+      complete: () => {
+        $('#loadingModal').remove()
+      },
+      success: (res) => {
+        $('body').append(`
           <div class="modal fade" id="${modalId}" role="dialog" aria-hidden="true">
               <div class="modal-dialog modal-xl">
                 <div class="modal-content">
@@ -89,6 +89,7 @@ function mouseOverImg(e) {
               </button>
             </div>
             <div class="modal-body text-left">
+            <form id="editPhotoForm">
               to Edit Picture & Title Please Enter Values And Sumbit
 
               <div class="input-group input-group-sm mb-3 mt-3 w-75">
@@ -111,9 +112,9 @@ function mouseOverImg(e) {
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="">Submit</button>
+                <button type="button" class="btn btn-warning" id="editPhotoButton"  data-id="${res.data._id}" onclick="editPhotoForm(this)">Submit</button>
               </div>
-
+            </form>
             </div>
           </div>
         </div>
@@ -143,88 +144,122 @@ function mouseOverImg(e) {
         </div>
       </div>
             `)
-            $(`#${modalId}`).modal()
-        }
-      })
-     
-    }
-      $(`#${modalId}`).modal()
+        $(`#${modalId}`).modal()
+      }
+    })
+
+  }
+  $(`#${modalId}`).modal()
+}
+
+
+
+
+
+$('#addPhotoForm').on('submit', function (ev) {
+  ev.preventDefault()
+  let formData = new FormData(this)
+
+  for (i = 0; i < this[0].files.length; i++) {
+    formData.append(`photos`, this[0].files[i])
   }
 
-
-
-
-
- $('#addPhotoForm').on('submit' , function(ev){
-   ev.preventDefault()
-   let formData = new FormData(this)
-
-   for (i=0 ; i<this[0].files.length ; i++) {
-    formData.append(`photos` , this[0].files[i])
-   }
-
-   $.ajax({
-     type : 'POST',
-     url : `${window.location}api/photos`,
-     async : true,
-     processData : false,
-     contentType  : false,
-     data : formData,
-     beforeSend : ()=>{
-      $('#addPhotos').attr('disabled','true')
+  $.ajax({
+    type: 'POST',
+    url: `api/photos`,
+    async: true,
+    processData: false,
+    contentType: false,
+    data: formData,
+    beforeSend: () => {
+      $('#addPhotos').attr('disabled', 'true')
       $('#addPhotos').html(`
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div> `
-    )},
-     success : (res)=>{
-       if(res.status === 'success')
-        setTimeout(location.reload(),1000)
-     }
-   })
- })
-
-
- $('#removeAllPhotos').on('click' , ()=>{
-
-  $.ajax({
-    type : 'DELETE',
-    url : `${window.location}api/photos`,
-    async : true,
-    beforeSend : ()=>{
-      $('#removeAllPhotos').attr('disabled','true')
-      $('#removeAllPhotos').html(`
-    <div class="spinner-border" role="status">
-      <span class="sr-only">Loading...</span>
-    </div> `
-    )
+      )
     },
-    success : (res)=>{
-      if(res.status === 'success')
-       setTimeout(location.reload(),1000)
+    success: (res) => {
+      if (res.status === 'success')
+        setTimeout(location.reload(), 1000)
     }
   })
 })
 
 
-function removeSelf(e){
+$('#removeAllPhotos').on('click', () => {
+
+  $.ajax({
+    type: 'DELETE',
+    url: `api/photos`,
+    async: true,
+    beforeSend: () => {
+      $('#removeAllPhotos').attr('disabled', 'true')
+      $('#removeAllPhotos').html(`
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div> `
+      )
+    },
+    success: (res) => {
+      if (res.status === 'success')
+        setTimeout(location.reload(), 1000)
+    }
+  })
+})
+
+
+function removeSelf(e) {
   const id = $(e).attr('data-id')
   console.log(id)
   $.ajax({
-    type : 'DELETE',
-    url : `${window.location}api/photos/${id}`,
-    async : true,
-    beforeSend : ()=>{
-      $('#removeSelf').attr('disabled','true')
+    type: 'DELETE',
+    url: `api/photos/${id}`,
+    async: true,
+    beforeSend: () => {
+      $('#removeSelf').attr('disabled', 'true')
       $('#removeSelf').html(`
     <div class="spinner-border" role="status">
       <span class="sr-only">Loading...</span>
     </div> `
-    )
+      )
     },
-    success : (res)=>{
-      if(res.status === 'success')
-       setTimeout(location.reload(),1000)
+    success: (res) => {
+      if (res.status === 'success')
+        setTimeout(location.reload(), 1000)
+    }
+  })
+}
+
+
+
+function editPhotoForm(e) {
+  const id = $(e).attr('data-id')
+  const form = $('#editPhotoForm')[0]
+  let formData = new FormData(form)
+  for (i = 0; i < form[1].files.length; i++) {
+    formData.append(`photos`, form[1].files[i])
+  }
+  console.log(...formData)
+
+  $.ajax({
+    type: 'PUT',
+    url: `api/photos/${id}`,
+    async: true,
+    processData: false,
+    contentType: false,
+    data: formData,
+    beforeSend: () => {
+      $('#editPhotoButton').attr('disabled', 'true')
+      $('#editPhotoButton').html(`
+   <div class="spinner-border" role="status">
+     <span class="sr-only">Loading...</span>
+   </div> `
+      )
+    },
+    success: (res) => {
+      if (res.status === 'success')
+        setTimeout(location.reload(), 1000)
     }
   })
 }

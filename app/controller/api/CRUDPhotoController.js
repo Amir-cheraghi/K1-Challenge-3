@@ -27,8 +27,6 @@ module.exports = new class frontController {
 
     async addPhoto(req, res) {
         try {
-            console.log(req.body)
-            console.log(req.files)
             const titles = req.body.title.split(',')
             const data = []
             for (const [i, el] of req.files.entries()) {
@@ -103,6 +101,55 @@ module.exports = new class frontController {
             res.json({
                 status: 'success',
                 msg: `${data.title} Successfully Deleted`
+            })
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+
+    async editPhoto(req, res) {
+        try {
+
+            const photo = await Photo.findById(req.params.id)
+
+            if (req.file) {
+                const originalPhotoPath = path.join(process.cwd(), req.file.path)
+                const smallPhotoPath = `/uploads/smallSize/${Date.now()}--${req.file.originalname}`
+                const largePhotoPath = `/uploads/largeSize/${Date.now()}--${req.file.originalname}`
+                const originalImage = await jimp.read(originalPhotoPath)
+                originalImage
+                    .resize(327, 327)
+                    .write(path.join(process.cwd(), `src/public${smallPhotoPath}`))
+
+                originalImage
+                    .resize(849, 849)
+                    .write(path.join(process.cwd(), `src/public${largePhotoPath}`))
+
+                const size = await sizeOf(originalPhotoPath)
+                await removeFile(`${process.cwd()}/src/public/${photo.originalPhotoPath}`)
+                await removeFile(`${process.cwd()}/src/public${photo.smallPhotoPath}`)
+                await removeFile(`${process.cwd()}/src/public${photo.largePhotoPath}`)
+                    photo.originalPhotoPath = req.file.path.replace('src\\public\\', ''),
+                    photo.smallPhotoPath = smallPhotoPath
+                    photo.largePhotoPath = largePhotoPath
+                    photo.title = req.body.title || photo.title,
+                    photo.width = size.width,
+                    photo.height = size.height,
+                    photo.size = `${req.file.size} Byte`
+
+
+                await photo.save()
+
+
+            } else {
+                photo.title = req.body.title
+                await photo.save()
+            }
+            res.json({
+                status: 'success',
+                msg: 'Photo Successfully Edited',
+                data: photo
             })
         } catch (err) {
             console.log(err)
